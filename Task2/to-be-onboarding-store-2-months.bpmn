@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:storm="http://storm.bpmn2.ru/ns" id="definitions_e41aaee0-f448-416e-a4fc-b9f9d1b918d7" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="Process_id_d2f6ad66d41b" processType="None" isClosed="false" isExecutable="false">
+    <laneSet id="LaneSet_id_a9039bdb71b0">
+      <lane id="Lane_id_a423028dc0d3" name="Cloud POS (Магазин)">
+        <flowNodeRef>ServiceTask_id_3be8e8e12e14</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_ef11d86765bf</flowNodeRef>
+      </lane>
+      <lane id="Lane_id_6444c160650c" name="SAP ERP">
+        <flowNodeRef>ServiceTask_id_183898d47f85</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_dc0fc0f48e24</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_310ff5965236</flowNodeRef>
+      </lane>
+      <lane id="Lane_id_69906873c019" name="Товаровед (HQ)">
+        <flowNodeRef>UserTask_id_5c3fede07717</flowNodeRef>
+        <flowNodeRef>UserTask_id_7449c1916df3</flowNodeRef>
+      </lane>
+      <lane id="Lane_id_6813e1a0a385" name="AI Service (SKU Matching)">
+        <flowNodeRef>ServiceTask_id_11519a6568d4</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_7ced76366b08</flowNodeRef>
+        <flowNodeRef>ExclusiveGateway_id_1435a9eb8205</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_3f1300938402</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_4b3a48ec601d</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_e13cb9e08c6a</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_1d5d4fe3ebf2</flowNodeRef>
+        <flowNodeRef>Gateway_02n1yt0</flowNodeRef>
+      </lane>
+      <lane id="Lane_id_776c5a064285" name="iPaaS (Data Integration)">
+        <flowNodeRef>ServiceTask_id_39fa92bdfb4e</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_eefe7d109149</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_b9219680c3a3</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_20413cc87834</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_3c120b67d62f</flowNodeRef>
+        <flowNodeRef>ExclusiveGateway_id_04f8cdb917ef</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_02199198fda2</flowNodeRef>
+        <flowNodeRef>ServiceTask_id_031e0bee5c85</flowNodeRef>
+        <flowNodeRef>EndEvent_id_44e571be68a3</flowNodeRef>
+      </lane>
+      <lane id="Lane_id_14a1ef0b800f" name="ИТ-инженер (Магазин)">
+        <flowNodeRef>StartEvent_id_ff09ca805d6d</flowNodeRef>
+        <flowNodeRef>UserTask_id_bdd176123497</flowNodeRef>
+        <flowNodeRef>UserTask_id_27fc26333220</flowNodeRef>
+        <flowNodeRef>UserTask_id_c97e976b1f59</flowNodeRef>
+        <flowNodeRef>UserTask_id_94b9af994b75</flowNodeRef>
+        <flowNodeRef>UserTask_id_da5976750e7c</flowNodeRef>
+        <flowNodeRef>EndEvent_id_da142f393a5f</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="StartEvent_id_ff09ca805d6d" name="Старт: магазин куплен">
+      <outgoing>Flow_id_0aad26d948fb</outgoing>
+    </startEvent>
+    <userTask id="UserTask_id_bdd176123497" name="Прибыть в купленный магазин" implementation="##unspecified">
+      <incoming>Flow_id_0aad26d948fb</incoming>
+      <outgoing>Flow_id_9ff77be09bac</outgoing>
+    </userTask>
+    <userTask id="UserTask_id_27fc26333220" name="Подключиться к старой кассе" implementation="##unspecified">
+      <incoming>Flow_id_9ff77be09bac</incoming>
+      <outgoing>Flow_id_210bc903a50f</outgoing>
+    </userTask>
+    <userTask id="UserTask_id_c97e976b1f59" name="Выгрузить номенклатуру в CSV/XLS" implementation="##unspecified">
+      <incoming>Flow_id_210bc903a50f</incoming>
+      <outgoing>Flow_id_005c4214a5d9</outgoing>
+    </userTask>
+    <userTask id="UserTask_id_94b9af994b75" name="Загрузить файл через self-service портал" implementation="##unspecified">
+      <incoming>Flow_id_005c4214a5d9</incoming>
+      <outgoing>Flow_id_6e8ab7eb41e2</outgoing>
+    </userTask>
+    <serviceTask id="ServiceTask_id_39fa92bdfb4e" name="Принять файл" implementation="##WebService">
+      <incoming>Flow_id_6e8ab7eb41e2</incoming>
+      <outgoing>Flow_id_9498951426be</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_eefe7d109149" name="Обработать данные:&#10;- нормализовать названия,&#10;- очистить от мусора,&#10;- унифицировать единицы,&#10;- удалить дулбикаты" implementation="##WebService">
+      <incoming>Flow_id_9498951426be</incoming>
+      <outgoing>Flow_id_6ac07b58fc96</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_b9219680c3a3" name="Сформировать пакет для AI Service" implementation="##WebService">
+      <incoming>Flow_id_6ac07b58fc96</incoming>
+      <outgoing>Flow_id_44c04f3cdb2b</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_11519a6568d4" name="Сопоставить позиции с эталонной базой VitaStore (векторный поиск и fuzzy matching)" implementation="##WebService">
+      <incoming>Flow_id_8da1009f2cd5</incoming>
+      <outgoing>Flow_id_374b68007f66</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_7ced76366b08" name="Рассчитать confidence score" implementation="##WebService">
+      <incoming>Flow_id_374b68007f66</incoming>
+      <outgoing>Flow_id_8f747def2d9d</outgoing>
+    </serviceTask>
+    <exclusiveGateway id="ExclusiveGateway_id_1435a9eb8205">
+      <incoming>Flow_id_8f747def2d9d</incoming>
+      <outgoing>Flow_id_ef858bcbdd3d</outgoing>
+      <outgoing>Flow_id_205226bbb82d</outgoing>
+    </exclusiveGateway>
+    <serviceTask id="ServiceTask_id_3f1300938402" name="Выполнить автоматический маппинг данных" implementation="##WebService">
+      <incoming>Flow_id_ef858bcbdd3d</incoming>
+      <outgoing>Flow_id_53659a6ac86b</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_4b3a48ec601d" name="Пометить позиции low-confidence" implementation="##WebService">
+      <incoming>Flow_id_205226bbb82d</incoming>
+      <outgoing>Flow_id_afa4d39e93c5</outgoing>
+    </serviceTask>
+    <userTask id="UserTask_id_5c3fede07717" name="Подтвердить или исправить маппинг" implementation="##unspecified">
+      <incoming>Flow_id_2a821cb6cc95</incoming>
+      <outgoing>Flow_id_d4254ee477c2</outgoing>
+    </userTask>
+    <serviceTask id="ServiceTask_id_20413cc87834" name="Консолидировать результаты" implementation="##WebService">
+      <incoming>Flow_00pvfdh</incoming>
+      <outgoing>Flow_id_c15b25686752</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_3c120b67d62f" name="Валидировать данные" implementation="##WebService">
+      <incoming>Flow_id_c15b25686752</incoming>
+      <outgoing>Flow_id_db712d38f523</outgoing>
+    </serviceTask>
+    <exclusiveGateway id="ExclusiveGateway_id_04f8cdb917ef" name="Валидация пройдена?">
+      <incoming>Flow_id_db712d38f523</incoming>
+      <outgoing>Flow_id_f64ad190927f</outgoing>
+      <outgoing>Flow_id_04579c9b58af</outgoing>
+    </exclusiveGateway>
+    <serviceTask id="ServiceTask_id_183898d47f85" name="Загрузить номенклатуру в SAP ERP" implementation="##WebService">
+      <incoming>Flow_id_f64ad190927f</incoming>
+      <outgoing>Flow_id_bb68bbab3693</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_dc0fc0f48e24" name="Создать и обновить карточки товаров" implementation="##WebService">
+      <incoming>Flow_id_bb68bbab3693</incoming>
+      <outgoing>Flow_id_713292eec3a9</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_310ff5965236" name="Сгенерировать события обновления прайс-листов" implementation="##WebService">
+      <incoming>Flow_id_713292eec3a9</incoming>
+      <outgoing>Flow_id_75c7fb730886</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_3be8e8e12e14" name="Синхронизировать локальный кэш справочников" implementation="##WebService">
+      <incoming>Flow_id_75c7fb730886</incoming>
+      <outgoing>Flow_id_2c888d8b11e2</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_ef11d86765bf" name="Проверить целостность данных" implementation="##WebService">
+      <incoming>Flow_id_2c888d8b11e2</incoming>
+      <outgoing>Flow_id_80708f994422</outgoing>
+    </serviceTask>
+    <userTask id="UserTask_id_da5976750e7c" name="Тестовое сканирование контрольных позиций" implementation="##unspecified">
+      <incoming>Flow_id_80708f994422</incoming>
+      <outgoing>Flow_id_748db3eeabc6</outgoing>
+    </userTask>
+    <endEvent id="EndEvent_id_da142f393a5f" name="Магазин готов к работе">
+      <incoming>Flow_id_748db3eeabc6</incoming>
+    </endEvent>
+    <serviceTask id="ServiceTask_id_02199198fda2" name="Сформировать отчёт об ошибках" implementation="##WebService">
+      <incoming>Flow_id_04579c9b58af</incoming>
+      <outgoing>Flow_id_0415acf9c9aa</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_031e0bee5c85" name="Уведомить ИТ-инженера и товароведа" implementation="##WebService">
+      <incoming>Flow_id_0415acf9c9aa</incoming>
+      <outgoing>Flow_id_84919affc922</outgoing>
+    </serviceTask>
+    <serviceTask id="ServiceTask_id_e13cb9e08c6a" name="Отправить в очередь верификации" implementation="##WebService">
+      <incoming>Flow_id_afa4d39e93c5</incoming>
+      <outgoing>Flow_id_0723811c2777</outgoing>
+    </serviceTask>
+    <endEvent id="EndEvent_id_44e571be68a3" name="Возврат на доработку">
+      <incoming>Flow_id_84919affc922</incoming>
+    </endEvent>
+    <serviceTask id="ServiceTask_id_1d5d4fe3ebf2" name="Сгенерировать embeddings для позиций" implementation="##WebService">
+      <incoming>Flow_id_44c04f3cdb2b</incoming>
+      <outgoing>Flow_id_8da1009f2cd5</outgoing>
+    </serviceTask>
+    <userTask id="UserTask_id_7449c1916df3" name="Проверить low-confidence позиции" implementation="##unspecified">
+      <incoming>Flow_id_0723811c2777</incoming>
+      <outgoing>Flow_id_2a821cb6cc95</outgoing>
+    </userTask>
+    <exclusiveGateway id="Gateway_02n1yt0">
+      <incoming>Flow_id_53659a6ac86b</incoming>
+      <incoming>Flow_id_d4254ee477c2</incoming>
+      <outgoing>Flow_00pvfdh</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="Flow_id_0aad26d948fb" name="" sourceRef="StartEvent_id_ff09ca805d6d" targetRef="UserTask_id_bdd176123497" />
+    <sequenceFlow id="Flow_id_9ff77be09bac" name="" sourceRef="UserTask_id_bdd176123497" targetRef="UserTask_id_27fc26333220" />
+    <sequenceFlow id="Flow_id_210bc903a50f" name="" sourceRef="UserTask_id_27fc26333220" targetRef="UserTask_id_c97e976b1f59" />
+    <sequenceFlow id="Flow_id_005c4214a5d9" name="" sourceRef="UserTask_id_c97e976b1f59" targetRef="UserTask_id_94b9af994b75" />
+    <sequenceFlow id="Flow_id_6e8ab7eb41e2" name="Файл: номенклатура" sourceRef="UserTask_id_94b9af994b75" targetRef="ServiceTask_id_39fa92bdfb4e" />
+    <sequenceFlow id="Flow_id_9498951426be" name="" sourceRef="ServiceTask_id_39fa92bdfb4e" targetRef="ServiceTask_id_eefe7d109149" />
+    <sequenceFlow id="Flow_id_6ac07b58fc96" name="" sourceRef="ServiceTask_id_eefe7d109149" targetRef="ServiceTask_id_b9219680c3a3" />
+    <sequenceFlow id="Flow_id_44c04f3cdb2b" name="Пакет позиций" sourceRef="ServiceTask_id_b9219680c3a3" targetRef="ServiceTask_id_1d5d4fe3ebf2" />
+    <sequenceFlow id="Flow_id_8da1009f2cd5" name="" sourceRef="ServiceTask_id_1d5d4fe3ebf2" targetRef="ServiceTask_id_11519a6568d4" />
+    <sequenceFlow id="Flow_id_374b68007f66" name="" sourceRef="ServiceTask_id_11519a6568d4" targetRef="ServiceTask_id_7ced76366b08" />
+    <sequenceFlow id="Flow_id_8f747def2d9d" name="Confidence ≥ 95%?" sourceRef="ServiceTask_id_7ced76366b08" targetRef="ExclusiveGateway_id_1435a9eb8205" />
+    <sequenceFlow id="Flow_id_ef858bcbdd3d" name="Да — high-confidence" sourceRef="ExclusiveGateway_id_1435a9eb8205" targetRef="ServiceTask_id_3f1300938402" />
+    <sequenceFlow id="Flow_id_205226bbb82d" name="Нет — low-confidence" sourceRef="ExclusiveGateway_id_1435a9eb8205" targetRef="ServiceTask_id_4b3a48ec601d" />
+    <sequenceFlow id="Flow_id_53659a6ac86b" name="High-confidence пары" sourceRef="ServiceTask_id_3f1300938402" targetRef="Gateway_02n1yt0" />
+    <sequenceFlow id="Flow_id_afa4d39e93c5" name="" sourceRef="ServiceTask_id_4b3a48ec601d" targetRef="ServiceTask_id_e13cb9e08c6a" />
+    <sequenceFlow id="Flow_id_2a821cb6cc95" name="" sourceRef="UserTask_id_7449c1916df3" targetRef="UserTask_id_5c3fede07717" />
+    <sequenceFlow id="Flow_id_d4254ee477c2" name="Исправления в staging area" sourceRef="UserTask_id_5c3fede07717" targetRef="Gateway_02n1yt0" />
+    <sequenceFlow id="Flow_00pvfdh" sourceRef="Gateway_02n1yt0" targetRef="ServiceTask_id_20413cc87834" />
+    <sequenceFlow id="Flow_id_c15b25686752" name="" sourceRef="ServiceTask_id_20413cc87834" targetRef="ServiceTask_id_3c120b67d62f" />
+    <sequenceFlow id="Flow_id_db712d38f523" name="" sourceRef="ServiceTask_id_3c120b67d62f" targetRef="ExclusiveGateway_id_04f8cdb917ef" />
+    <sequenceFlow id="Flow_id_f64ad190927f" name="Да" sourceRef="ExclusiveGateway_id_04f8cdb917ef" targetRef="ServiceTask_id_183898d47f85" storm:LabelWidth="30" storm:LabelHeight="20" />
+    <sequenceFlow id="Flow_id_04579c9b58af" name="Нет" sourceRef="ExclusiveGateway_id_04f8cdb917ef" targetRef="ServiceTask_id_02199198fda2" />
+    <sequenceFlow id="Flow_id_bb68bbab3693" name="" sourceRef="ServiceTask_id_183898d47f85" targetRef="ServiceTask_id_dc0fc0f48e24" />
+    <sequenceFlow id="Flow_id_713292eec3a9" name="" sourceRef="ServiceTask_id_dc0fc0f48e24" targetRef="ServiceTask_id_310ff5965236" />
+    <sequenceFlow id="Flow_id_75c7fb730886" name="Event-driven API" sourceRef="ServiceTask_id_310ff5965236" targetRef="ServiceTask_id_3be8e8e12e14" />
+    <sequenceFlow id="Flow_id_2c888d8b11e2" name="" sourceRef="ServiceTask_id_3be8e8e12e14" targetRef="ServiceTask_id_ef11d86765bf" />
+    <sequenceFlow id="Flow_id_80708f994422" name="" sourceRef="ServiceTask_id_ef11d86765bf" targetRef="UserTask_id_da5976750e7c" />
+    <sequenceFlow id="Flow_id_748db3eeabc6" name="" sourceRef="UserTask_id_da5976750e7c" targetRef="EndEvent_id_da142f393a5f" />
+    <sequenceFlow id="Flow_id_0415acf9c9aa" name="" sourceRef="ServiceTask_id_02199198fda2" targetRef="ServiceTask_id_031e0bee5c85" />
+    <sequenceFlow id="Flow_id_84919affc922" name="" sourceRef="ServiceTask_id_031e0bee5c85" targetRef="EndEvent_id_44e571be68a3" />
+    <sequenceFlow id="Flow_id_0723811c2777" name="Очередь верификации" sourceRef="ServiceTask_id_e13cb9e08c6a" targetRef="UserTask_id_7449c1916df3" />
+  </process>
+  <collaboration id="Collab_id_8b7062f1d900" isClosed="false">
+    <participant id="Participant_id_c942d913093b" name="Pool" processRef="Process_id_d2f6ad66d41b" />
+  </collaboration>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_id_4b65df3208b6">
+    <bpmndi:BPMNPlane id="BPMNPlane_id_616f89f61c3d" bpmnElement="Collab_id_8b7062f1d900">
+      <bpmndi:BPMNShape id="Participant_id_c942d913093b_di" bpmnElement="Participant_id_c942d913093b" isHorizontal="true">
+        <dc:Bounds x="122" y="-110" width="6446" height="1230" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_id_a423028dc0d3_di" bpmnElement="Lane_id_a423028dc0d3" isHorizontal="true">
+        <dc:Bounds x="152" y="940" width="6416" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_id_6444c160650c_di" bpmnElement="Lane_id_6444c160650c" isHorizontal="true">
+        <dc:Bounds x="152" y="760" width="6416" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_id_69906873c019_di" bpmnElement="Lane_id_69906873c019" isHorizontal="true">
+        <dc:Bounds x="152" y="580" width="6416" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_id_6813e1a0a385_di" bpmnElement="Lane_id_6813e1a0a385" isHorizontal="true">
+        <dc:Bounds x="152" y="250" width="6416" height="330" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_id_776c5a064285_di" bpmnElement="Lane_id_776c5a064285" isHorizontal="true">
+        <dc:Bounds x="152" y="70" width="6416" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_id_14a1ef0b800f_di" bpmnElement="Lane_id_14a1ef0b800f" isHorizontal="true">
+        <dc:Bounds x="152" y="-110" width="6416" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_id_ff09ca805d6d_di" bpmnElement="StartEvent_id_ff09ca805d6d">
+        <dc:Bounds x="244" y="-38" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="225" y="-2" width="75" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_id_bdd176123497_di" bpmnElement="UserTask_id_bdd176123497">
+        <dc:Bounds x="382" y="-60" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_id_27fc26333220_di" bpmnElement="UserTask_id_27fc26333220">
+        <dc:Bounds x="632" y="-60" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_id_c97e976b1f59_di" bpmnElement="UserTask_id_c97e976b1f59">
+        <dc:Bounds x="883" y="-60" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_id_94b9af994b75_di" bpmnElement="UserTask_id_94b9af994b75">
+        <dc:Bounds x="1149" y="-60" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_39fa92bdfb4e_di" bpmnElement="ServiceTask_id_39fa92bdfb4e">
+        <dc:Bounds x="1415" y="120" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_eefe7d109149_di" bpmnElement="ServiceTask_id_eefe7d109149">
+        <dc:Bounds x="1612" y="120" width="200" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_b9219680c3a3_di" bpmnElement="ServiceTask_id_b9219680c3a3">
+        <dc:Bounds x="1875" y="120" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_11519a6568d4_di" bpmnElement="ServiceTask_id_11519a6568d4">
+        <dc:Bounds x="2407" y="318" width="186" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_7ced76366b08_di" bpmnElement="ServiceTask_id_7ced76366b08">
+        <dc:Bounds x="2673" y="318" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_id_1435a9eb8205_di" bpmnElement="ExclusiveGateway_id_1435a9eb8205" isMarkerVisible="true">
+        <dc:Bounds x="2938" y="333" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2891" y="523" width="64" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_3f1300938402_di" bpmnElement="ServiceTask_id_3f1300938402">
+        <dc:Bounds x="3083" y="318" width="137" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_4b3a48ec601d_di" bpmnElement="ServiceTask_id_4b3a48ec601d">
+        <dc:Bounds x="3083" y="433" width="137" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_id_5c3fede07717_di" bpmnElement="UserTask_id_5c3fede07717">
+        <dc:Bounds x="3881" y="630" width="159" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_20413cc87834_di" bpmnElement="ServiceTask_id_20413cc87834">
+        <dc:Bounds x="4147" y="120" width="165" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_3c120b67d62f_di" bpmnElement="ServiceTask_id_3c120b67d62f">
+        <dc:Bounds x="4392" y="120" width="150" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_id_04f8cdb917ef_di" bpmnElement="ExclusiveGateway_id_04f8cdb917ef" isMarkerVisible="true">
+        <dc:Bounds x="4637" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4583" y="129" width="54" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_183898d47f85_di" bpmnElement="ServiceTask_id_183898d47f85">
+        <dc:Bounds x="4782" y="810" width="168" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_dc0fc0f48e24_di" bpmnElement="ServiceTask_id_dc0fc0f48e24">
+        <dc:Bounds x="5048" y="810" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_310ff5965236_di" bpmnElement="ServiceTask_id_310ff5965236">
+        <dc:Bounds x="5314" y="810" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_3be8e8e12e14_di" bpmnElement="ServiceTask_id_3be8e8e12e14">
+        <dc:Bounds x="5580" y="990" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_ef11d86765bf_di" bpmnElement="ServiceTask_id_ef11d86765bf">
+        <dc:Bounds x="5846" y="990" width="176" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_id_da5976750e7c_di" bpmnElement="UserTask_id_da5976750e7c">
+        <dc:Bounds x="6102" y="-60" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_id_da142f393a5f_di" bpmnElement="EndEvent_id_da142f393a5f">
+        <dc:Bounds x="6390" y="-38" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6368" y="-2" width="80" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_02199198fda2_di" bpmnElement="ServiceTask_id_02199198fda2">
+        <dc:Bounds x="4785" y="120" width="181" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_031e0bee5c85_di" bpmnElement="ServiceTask_id_031e0bee5c85">
+        <dc:Bounds x="5048" y="120" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_e13cb9e08c6a_di" bpmnElement="ServiceTask_id_e13cb9e08c6a">
+        <dc:Bounds x="3349" y="433" width="186" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_id_44e571be68a3_di" bpmnElement="EndEvent_id_44e571be68a3">
+        <dc:Bounds x="5374" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5365" y="178" width="54" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_id_1d5d4fe3ebf2_di" bpmnElement="ServiceTask_id_1d5d4fe3ebf2">
+        <dc:Bounds x="2142" y="318" width="186" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_id_7449c1916df3_di" bpmnElement="UserTask_id_7449c1916df3">
+        <dc:Bounds x="3637" y="630" width="155" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_02n1yt0_di" bpmnElement="Gateway_02n1yt0" isMarkerVisible="true">
+        <dc:Bounds x="4055" y="333" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_id_0aad26d948fb_di" bpmnElement="Flow_id_0aad26d948fb">
+        <di:waypoint x="280" y="-20" />
+        <di:waypoint x="382" y="-20" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_9ff77be09bac_di" bpmnElement="Flow_id_9ff77be09bac">
+        <di:waypoint x="552.4" y="-20" />
+        <di:waypoint x="632.4" y="-20" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_210bc903a50f_di" bpmnElement="Flow_id_210bc903a50f">
+        <di:waypoint x="802.8" y="-20" />
+        <di:waypoint x="882.8" y="-20" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_005c4214a5d9_di" bpmnElement="Flow_id_005c4214a5d9">
+        <di:waypoint x="1068.8" y="-20" />
+        <di:waypoint x="1148.8" y="-20" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_6e8ab7eb41e2_di" bpmnElement="Flow_id_6e8ab7eb41e2">
+        <di:waypoint x="1334.8" y="-20" />
+        <di:waypoint x="1384.8" y="-20" />
+        <di:waypoint x="1384.8" y="160" />
+        <di:waypoint x="1414.8" y="160" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1365" y="60" width="71" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_9498951426be_di" bpmnElement="Flow_id_9498951426be">
+        <di:waypoint x="1565" y="160" />
+        <di:waypoint x="1612" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_6ac07b58fc96_di" bpmnElement="Flow_id_6ac07b58fc96">
+        <di:waypoint x="1812" y="160" />
+        <di:waypoint x="1875" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_44c04f3cdb2b_di" bpmnElement="Flow_id_44c04f3cdb2b">
+        <di:waypoint x="2061" y="160" />
+        <di:waypoint x="2110.8" y="160" />
+        <di:waypoint x="2110.8" y="358" />
+        <di:waypoint x="2142" y="358" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2089" y="249" width="74" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_8da1009f2cd5_di" bpmnElement="Flow_id_8da1009f2cd5">
+        <di:waypoint x="2328" y="358" />
+        <di:waypoint x="2407" y="358" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_374b68007f66_di" bpmnElement="Flow_id_374b68007f66">
+        <di:waypoint x="2592.8" y="357.5" />
+        <di:waypoint x="2672.8" y="357.5" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_8f747def2d9d_di" bpmnElement="Flow_id_8f747def2d9d">
+        <di:waypoint x="2843.2000000000003" y="357.5" />
+        <di:waypoint x="2938.2000000000003" y="357.5" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2867" y="328" width="64" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_ef858bcbdd3d_di" bpmnElement="Flow_id_ef858bcbdd3d">
+        <di:waypoint x="2988" y="358" />
+        <di:waypoint x="3083" y="358" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3009" y="334" width="54" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_205226bbb82d_di" bpmnElement="Flow_id_205226bbb82d">
+        <di:waypoint x="2963" y="383" />
+        <di:waypoint x="2963.2000000000003" y="473" />
+        <di:waypoint x="3083" y="473" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3005" y="444" width="56" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_53659a6ac86b_di" bpmnElement="Flow_id_53659a6ac86b">
+        <di:waypoint x="3220" y="358" />
+        <di:waypoint x="4055" y="358" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3902" y="328" width="80" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_afa4d39e93c5_di" bpmnElement="Flow_id_afa4d39e93c5">
+        <di:waypoint x="3220" y="473" />
+        <di:waypoint x="3349" y="473" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_2a821cb6cc95_di" bpmnElement="Flow_id_2a821cb6cc95">
+        <di:waypoint x="3792" y="670" />
+        <di:waypoint x="3881" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_d4254ee477c2_di" bpmnElement="Flow_id_d4254ee477c2">
+        <di:waypoint x="4040" y="670" />
+        <di:waypoint x="4080" y="670" />
+        <di:waypoint x="4080" y="383" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4093" y="493" width="74" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00pvfdh_di" bpmnElement="Flow_00pvfdh">
+        <di:waypoint x="4080" y="333" />
+        <di:waypoint x="4080" y="160" />
+        <di:waypoint x="4147" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_c15b25686752_di" bpmnElement="Flow_id_c15b25686752">
+        <di:waypoint x="4312.400000000001" y="160" />
+        <di:waypoint x="4392.400000000001" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_db712d38f523_di" bpmnElement="Flow_id_db712d38f523">
+        <di:waypoint x="4542.400000000001" y="160" />
+        <di:waypoint x="4637.400000000001" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_f64ad190927f_di" bpmnElement="Flow_id_f64ad190927f">
+        <di:waypoint x="4662" y="185" />
+        <di:waypoint x="4662.400000000001" y="850" />
+        <di:waypoint x="4782" y="850" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4663" y="200" width="30" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_04579c9b58af_di" bpmnElement="Flow_id_04579c9b58af">
+        <di:waypoint x="4687.400000000001" y="160" />
+        <di:waypoint x="4785.000000000001" y="160" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4727" y="135" width="19" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_bb68bbab3693_di" bpmnElement="Flow_id_bb68bbab3693">
+        <di:waypoint x="4950" y="850" />
+        <di:waypoint x="5048" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_713292eec3a9_di" bpmnElement="Flow_id_713292eec3a9">
+        <di:waypoint x="5234.400000000001" y="850" />
+        <di:waypoint x="5314.400000000001" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_75c7fb730886_di" bpmnElement="Flow_id_75c7fb730886">
+        <di:waypoint x="5500.400000000001" y="850" />
+        <di:waypoint x="5550.400000000001" y="850" />
+        <di:waypoint x="5550.400000000001" y="1030" />
+        <di:waypoint x="5580.400000000001" y="1030" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5526" y="930" width="79" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_2c888d8b11e2_di" bpmnElement="Flow_id_2c888d8b11e2">
+        <di:waypoint x="5766.400000000001" y="1030" />
+        <di:waypoint x="5846.400000000001" y="1030" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_80708f994422_di" bpmnElement="Flow_id_80708f994422">
+        <di:waypoint x="6022.000000000001" y="1030" />
+        <di:waypoint x="6072.000000000001" y="1030" />
+        <di:waypoint x="6072.000000000001" y="-20" />
+        <di:waypoint x="6102.000000000001" y="-20" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_748db3eeabc6_di" bpmnElement="Flow_id_748db3eeabc6">
+        <di:waypoint x="6288.000000000001" y="-20" />
+        <di:waypoint x="6390.000000000001" y="-20" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_0415acf9c9aa_di" bpmnElement="Flow_id_0415acf9c9aa">
+        <di:waypoint x="4965.800000000001" y="160" />
+        <di:waypoint x="5048.400000000001" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_84919affc922_di" bpmnElement="Flow_id_84919affc922">
+        <di:waypoint x="5234" y="160" />
+        <di:waypoint x="5374" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_id_0723811c2777_di" bpmnElement="Flow_id_0723811c2777">
+        <di:waypoint x="3535" y="473" />
+        <di:waypoint x="3585.2000000000003" y="473" />
+        <di:waypoint x="3585.2000000000003" y="670" />
+        <di:waypoint x="3637" y="670" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3597" y="518" width="66" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
